@@ -1,0 +1,141 @@
+# =========================================================
+# CONFIG.YAML — Cấu hình trung tâm cho World Cup Predictor
+# Chỉnh sửa file này thay vì sửa code để thay đổi hành vi pipeline
+# =========================================================
+
+data:
+  raw_player_file: "data/raw/fifa_world_cup_2026_player_performance.csv"
+  # Dữ liệu lịch sử đối đầu thật — "results.csv" (International football results
+  # 1872-2024). Chạy scripts/convert_historical_results.py để tự động chuyển
+  # file này thành format team_a/team_b/result mà Bradley-Terry cần.
+  raw_historical_results_file: "data/raw/results.csv"
+  historical_matches_file: "data/raw/international_matches.csv"
+  # Dữ liệu benchmark EA Sports FC — dùng để học trọng số theo vị trí
+  # (xem scripts/learn_benchmark_weights.py)
+  benchmark_players_file: "data/raw/male_players.csv"
+  processed_team_stats_file: "data/processed/team_stats.csv"
+
+  # QUAN TRỌNG: dataset gốc là dữ liệu CẤP TRẬN ĐẤU — mỗi cầu thủ có NHIỀU dòng
+  # (1 dòng / trận, gắn với match_id). Pipeline sẽ tự gộp về cấp cầu thủ trước
+  # khi lọc đội hình chính. is_match_level=true bật bước gộp này.
+  is_match_level: true
+
+  # Tên cột trong dataset Kaggle thật — đã đối chiếu trực tiếp với file mẫu
+  columns:
+    team: "team"                      # tên đội tuyển (KHÔNG phải "national_team")
+    player_id: "player_id"
+    player_name: "player_name"
+    position: "position"              # kỳ vọng có giá trị dạng GK/DF/MF/FW
+    rating: "player_rating"           # rating của cầu thủ trong 1 trận cụ thể
+    minutes: "minutes_played"         # số phút thi đấu trong 1 trận cụ thể
+    goals: "goals"                    # bàn thắng trong 1 trận cụ thể
+    assists: "assists"                # kiến tạo trong 1 trận cụ thể
+    clutch: "clutch_performance_score"
+    xg: "expected_goals_xg"
+    match_id: "match_id"
+    # Các cột TỔNG CẢ GIẢI đã có sẵn trong dataset — ưu tiên dùng thay vì tự
+    # cộng dồn từ các dòng trận đấu riêng lẻ (đáng tin cậy hơn vì tránh đếm
+    # trùng nếu 1 trận có nhiều dòng phụ)
+    total_minutes_tournament: "total_minutes_tournament"
+    total_goals_tournament: "total_goals_tournament"
+    total_assists_tournament: "total_assists_tournament"
+    tournament_rating: "tournament_rating"
+
+  # Tên cột trong results.csv (International football results 1872-2024)
+  historical_results_columns:
+    date: "date"
+    home_team: "home_team"
+    away_team: "away_team"
+    home_score: "home_score"
+    away_score: "away_score"
+    tournament: "tournament"
+    neutral: "neutral"
+
+  # Chỉ dùng các trận đấu từ năm này trở về sau khi huấn luyện Bradley-Terry
+  # (bóng đá thay đổi nhiều qua thời gian, trận quá cũ không còn phản ánh
+  # đúng năng lực đội tuyển hiện tại)
+  historical_results_min_year: 2010
+
+  # QUAN TRỌNG: results.csv và dataset cầu thủ có thể đặt tên đội khác nhau
+  # (VD: "USA" vs "United States", "South Korea" vs "Korea Republic").
+  # Thêm alias vào đây nếu chạy main.py báo nhiều đội bị "bỏ qua vì không
+  # khớp" — key = tên trong results.csv, value = tên trong dataset cầu thủ.
+  team_name_aliases:
+    "USA": "United States"
+    "South Korea": "Korea Republic"
+    "IR Iran": "Iran"
+    "Ivory Coast": "Côte d'Ivoire"
+    "Czech Republic": "Czechia"
+    "Cape Verde": "Cabo Verde"
+
+aggregation:
+  top_n_players_per_team: 15   # chỉ lấy đội hình chính (theo phút thi đấu)
+
+# Cấu hình cho scripts/learn_benchmark_weights.py — học trọng số vị trí từ
+# dataset "EA Sports FC 24/25 Player Ratings" (male_players.csv)
+benchmark:
+  columns:
+    position: "Position"
+    overall: "OVR"
+    name: "Name"
+  # Ánh xạ mã vị trí của EA Sports FC -> 4 nhóm GK/DF/MF/FW dùng trong pipeline
+  position_group_map:
+    GK: ["GK"]
+    DF: ["CB", "LB", "RB", "LWB", "RWB"]
+    MF: ["CDM", "CM", "CAM", "LM", "RM"]
+    FW: ["ST", "CF", "LW", "RW"]
+  # Các cột chỉ số đầu vào dùng để học trọng số cho mỗi nhóm vị trí
+  feature_columns:
+    GK: ["GK Diving", "GK Handling", "GK Kicking", "GK Positioning", "GK Reflexes"]
+    DF: ["DEF", "PHY", "Standing Tackle", "Sliding Tackle", "Interceptions", "Heading Accuracy"]
+    MF: ["PAS", "DRI", "Short Passing", "Long Passing", "Vision", "Ball Control"]
+    FW: ["SHO", "PAC", "Finishing", "Shot Power", "Positioning", "Dribbling"]
+
+# Trọng số mặc định (dùng nếu chưa chạy feature-importance học tự động)
+# Tổng mỗi vị trí không bắt buộc = 1, sẽ được chuẩn hoá tự động
+position_weights:
+  GK:
+    rating: 0.6
+    clutch: 0.4
+  DF:
+    rating: 0.5
+    clutch: 0.3
+    goals: 0.2
+  MF:
+    rating: 0.4
+    assists: 0.35
+    clutch: 0.25
+  FW:
+    rating: 0.35
+    goals: 0.35
+    xg: 0.3
+
+# Trọng số gộp 3 tuyến thành sức mạnh tổng thể đội bóng
+line_weights:
+  attack: 0.35
+  midfield: 0.35
+  defense: 0.30
+
+model:
+  bradley_terry:
+    enabled: true
+  lightgbm:
+    objective: "binary"
+    metric: "binary_logloss"
+    boosting_type: "gbdt"
+    learning_rate: 0.05
+    num_leaves: 15
+    num_boost_round: 200
+    early_stopping_rounds: 20
+
+simulation:
+  monte_carlo_runs: 10000
+  random_seed: 42
+  # Số đội tham dự World Cup 2026
+  num_teams: 48
+  draw_probability_weight: 0.25  # xác suất hòa được cộng thêm ở vòng bảng
+
+output:
+  results_dir: "outputs"
+  championship_odds_file: "outputs/championship_odds.csv"
+  match_predictions_file: "outputs/sample_match_predictions.csv"

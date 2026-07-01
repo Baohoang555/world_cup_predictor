@@ -1,0 +1,28 @@
+position_weights:
+  DF:
+    DEF: 0.7719
+    Heading Accuracy: 0.0355
+    Interceptions: 0.0761
+    PHY: 0.0354
+    Sliding Tackle: 0.041
+    Standing Tackle: 0.0401
+  FW:
+    Dribbling: 0.1001
+    Finishing: 0.0081
+    PAC: 0.0174
+    Positioning: 0.1426
+    SHO: 0.7215
+    Shot Power: 0.0103
+  GK:
+    GK Diving: 0.4155
+    GK Handling: 0.086
+    GK Kicking: 0.0044
+    GK Positioning: 0.1909
+    GK Reflexes: 0.3032
+  MF:
+    Ball Control: 0.7904
+    DRI: 0.0374
+    Long Passing: 0.0279
+    PAS: 0.086
+    Short Passing: 0.0354
+    Vision: 0.0229
