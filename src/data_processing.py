@@ -1,14 +1,3 @@
-"""
-data_processing.py — Giai đoạn 1 của pipeline
-
-Chức năng:
-1. Đọc dữ liệu cầu thủ thô từ file CSV (Kaggle dataset)
-2. Kiểm tra & chuẩn hoá tên cột theo config.yaml (phòng khi tên cột thật khác)
-3. Lọc top-N cầu thủ theo phút thi đấu cho mỗi đội (đội hình chính)
-4. Gộp (aggregate) dữ liệu cầu thủ -> dữ liệu cấp đội tuyển, tách riêng theo
-   từng tuyến (GK / DF / MF / FW) để phục vụ feature engineering ở bước sau
-"""
-
 from pathlib import Path
 from typing import Optional
 
@@ -54,15 +43,6 @@ class PlayerDataProcessor:
 
     # ------------------------------------------------------------------
     def collapse_match_rows_to_player_level(self, df: pd.DataFrame) -> pd.DataFrame:
-        """Dataset gốc là cấp TRẬN ĐẤU: mỗi cầu thủ có nhiều dòng (1 dòng/trận,
-        gắn với match_id). Hàm này gộp về 1 dòng/cầu thủ trước khi lọc đội
-        hình chính & gộp cấp đội tuyển.
-
-        Ưu tiên dùng các cột tổng-cả-giải có sẵn (total_goals_tournament,...)
-        nếu dataset cung cấp, vì đáng tin cậy hơn tự cộng dồn thủ công
-        (tránh lỗi đếm trùng nếu 1 match_id có nhiều dòng phụ). Nếu không có,
-        tự động fallback sang cộng dồn từ các cột theo-trận.
-        """
         c = self.cols
         team_col, id_col, name_col, pos_col = c["team"], c["player_id"], c["player_name"], c["position"]
 
@@ -163,10 +143,6 @@ class PlayerDataProcessor:
             team_stats = team_stats.join(frame, how="left")
 
         team_stats = team_stats.fillna(0.0).reset_index()
-        # Chuẩn hoá tên cột đội tuyển về "national_team" bất kể tên cột gốc
-        # trong file CSV là gì (VD: "team") — để các module downstream
-        # (feature_engineering, simulation, main) dùng chung 1 tên cột cố định.
-        # Rename all columns: if a column name matches team_col, rename to "national_team"
         team_stats.columns = ["national_team" if c == team_col else c for c in team_stats.columns]
         logger.info(f"Đã gộp dữ liệu cho {len(team_stats)} đội tuyển")
         return team_stats

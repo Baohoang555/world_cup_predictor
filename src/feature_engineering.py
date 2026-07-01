@@ -1,15 +1,3 @@
-"""
-feature_engineering.py — Giai đoạn 2 của pipeline
-
-Chức năng:
-1. Tính điểm sức mạnh riêng cho từng tuyến (attack / midfield / defense)
-   dựa trên trọng số trong config.yaml (hoặc trọng số học tự động)
-2. Gộp 3 tuyến -> power_index tổng thể của mỗi đội
-3. (Tuỳ chọn) Học trọng số tối ưu bằng RandomForest Feature Importance,
-   nếu bạn có thêm một bộ dữ liệu benchmark (VD: FBref / EA Sports FC)
-   thay vì dùng trọng số thủ công trong config.yaml
-"""
-
 from typing import Optional
 
 import numpy as np

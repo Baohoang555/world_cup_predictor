@@ -1,26 +1,3 @@
-"""
-convert_historical_results.py
-
-Chuyển đổi dataset THẬT "International football results from 1872 to 2024"
-(results.csv, cột: date, home_team, away_team, home_score, away_score,
-tournament, city, country, neutral) sang định dạng team_a/team_b/result mà
-BradleyTerryModel cần.
-
-Cách xử lý:
-- Chỉ giữ các trận từ năm `historical_results_min_year` trở về sau (cấu hình
-  trong config.yaml) — bóng đá thay đổi nhiều theo thời gian, trận quá cũ
-  không phản ánh đúng năng lực đội tuyển ở World Cup 2026.
-- Trận thắng/thua: 1 dòng (team_a=home, team_b=away, result=1 nếu home thắng).
-- Trận hoà: KHÔNG bỏ qua (bỏ hết trận hoà sẽ làm mất rất nhiều dữ liệu, vì
-  bóng đá hoà khá thường xuyên). Thay vào đó, sinh 2 dòng đối nghịch cho cùng
-  cặp đấu (result=1 và result=0) để về mặt thống kê, mô hình học rằng 2 đội
-  này ngang sức nhau ở trận đó — một cách xấp xỉ hợp lý cho Logistic
-  Regression nhị phân (Bradley-Terry không có bản mở rộng "hoà" chuẩn).
-
-Cách dùng:
-    python scripts/convert_historical_results.py
-"""
-
 import sys
 from pathlib import Path
 

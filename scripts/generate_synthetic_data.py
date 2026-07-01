@@ -1,18 +1,3 @@
-"""
-generate_synthetic_data.py
-
-Sinh dữ liệu cầu thủ GIẢ LẬP theo đúng schema THẬT của dataset Kaggle
-"FIFA World Cup 2026 Player Performance Dataset" (đã đối chiếu trực tiếp với
-file mẫu người dùng cung cấp) để test pipeline khi CHƯA có file thật.
-
-Đặc điểm quan trọng của schema thật: đây là dữ liệu CẤP TRẬN ĐẤU — mỗi cầu
-thủ có NHIỀU dòng (1 dòng / trận đấu, gắn với match_id), kèm theo các cột
-tổng-cả-giải (total_goals_tournament,...) đã tính sẵn.
-
-Cách dùng:
-    python scripts/generate_synthetic_data.py
-"""
-
 import sys
 from pathlib import Path
 

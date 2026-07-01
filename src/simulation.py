@@ -1,12 +1,3 @@
-"""
-simulation.py — Giai đoạn 3 & 4 của pipeline: Hybrid Predictor + Tournament Simulator
-
-1. HybridMatchPredictor: kết hợp Bradley-Terry + LightGBM để ra xác suất
-   Thắng/Hòa/Thua cuối cùng cho 1 cặp đấu bất kỳ.
-2. TournamentSimulator: mô phỏng Monte Carlo toàn bộ giải đấu (vòng bảng +
-   knock-out) hàng chục nghìn lần để tính tỷ lệ vô địch của từng đội.
-"""
-
 import random
 from dataclasses import dataclass, field
 

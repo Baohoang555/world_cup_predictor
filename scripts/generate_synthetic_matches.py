@@ -1,22 +1,3 @@
-"""
-generate_synthetic_matches.py
-
-Bradley-Terry model cần dữ liệu LỊCH SỬ ĐỐI ĐẦU (match-level), điều mà dataset
-Kaggle "Player Performance" KHÔNG cung cấp. Script này sinh dữ liệu lịch sử
-đối đầu giả lập để bạn test pipeline end-to-end.
-
->>> KHUYẾN NGHỊ THAY THẾ BẰNG DỮ LIỆU THẬT <<<
-Bạn nên tìm thêm 1 trong các bộ dữ liệu sau trên Kaggle và đặt vào
-data/raw/international_matches.csv với 3 cột: team_a, team_b, result
-(result = 1 nếu team_a thắng, 0 nếu team_b thắng, bỏ qua các trận hòa hoặc
-tách thành 2 dòng 0.5/0.5 tuỳ chiến lược):
-  - "International football results from 1872 to 2024" (Kaggle, martj42)
-  - "FIFA World Ranking" (Kaggle)
-
-Cách dùng:
-    python scripts/generate_synthetic_matches.py
-"""
-
 import sys
 from pathlib import Path
 

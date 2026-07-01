@@ -1,15 +1,3 @@
-"""
-lgbm_model.py — LightGBM Match Outcome Predictor
-
-Dự đoán xác suất thắng của team_a trước team_b dựa trên:
-- Chênh lệch các chỉ số sức mạnh theo tuyến (attack/midfield/defense) từ feature_engineering.py
-- Xác suất gốc từ Bradley-Terry model (dùng làm 1 feature "prior" lịch sử)
-
-Đây chính là kiến trúc Hybrid Ensemble: Bradley-Terry (lịch sử đối đầu)
-đóng vai trò 1 feature đầu vào cho LightGBM (phong độ/chất lượng hiện tại),
-để mô hình tự học cách cân bằng giữa 2 nguồn thông tin.
-"""
-
 from pathlib import Path
 
 import lightgbm as lgb

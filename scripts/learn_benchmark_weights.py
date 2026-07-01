@@ -1,24 +1,3 @@
-"""
-learn_benchmark_weights.py
-
-Học trọng số tối ưu cho từng vị trí (GK/DF/MF/FW) bằng Random Forest Feature
-Importance, dùng dataset benchmark THẬT "EA Sports FC 24/25 Player Ratings"
-(male_players.csv) làm ground-truth: dự đoán điểm OVR (Overall Rating) của
-EA Sports từ các chỉ số kỹ năng thành phần, sau đó lấy độ quan trọng của
-từng chỉ số làm trọng số.
-
-Đây chính là "Bước A" trong phần "Phương pháp lập trình để tích hợp vào mô
-hình dự đoán" mà bạn đã brainstorm — EA Sports đã mất hàng chục năm tối ưu
-công thức chấm OVR, nên trọng số học được từ đây là một benchmark đáng tin cậy.
-
-Cách dùng:
-    python scripts/learn_benchmark_weights.py
-
-Sau khi chạy, trọng số học được sẽ được in ra và LƯU ĐÈ vào config.yaml
-(mục position_weights) — hãy backup config.yaml trước nếu bạn muốn giữ trọng
-số thủ công ban đầu.
-"""
-
 import sys
 from pathlib import Path
 
