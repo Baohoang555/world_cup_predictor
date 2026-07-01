@@ -1,19 +1,3 @@
-"""
-main.py — Điểm khởi chạy toàn bộ hệ thống dự đoán vô địch World Cup 2026
-
-Chạy:
-    python main.py
-
-Pipeline thực hiện tuần tự:
-1. Đọc & gộp dữ liệu cầu thủ -> dữ liệu đội tuyển        (src/data_processing.py)
-2. Tính điểm sức mạnh theo tuyến + Power Index            (src/feature_engineering.py)
-3. Huấn luyện Bradley-Terry trên lịch sử đối đầu          (src/models/bradley_terry.py)
-4. Huấn luyện LightGBM Hybrid Match Predictor             (src/models/lgbm_model.py)
-5. Mô phỏng Monte Carlo toàn bộ giải đấu (vòng bảng +
-   knock-out) hàng nghìn lần                              (src/simulation.py)
-6. Xuất bảng tỷ lệ % vô địch ra outputs/championship_odds.csv
-"""
-
 import random
 
 import numpy as np
